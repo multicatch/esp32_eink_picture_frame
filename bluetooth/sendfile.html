@@ -1,0 +1,127 @@
+<html>
+<body>
+<button id="connectButton">Connect</button>
+<button id="disconnectButton">Disconnect</button>
+<input id="imageFile" type="file" />
+<button id="sendButton" disabled>Send data</button>
+<div id="status"></div>
+
+<script>
+const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+const RX_UUID      = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+const NUMBER_UUID  = "beb5483e-36e1-4688-b7f5-ea07361b26a9";
+
+let device;
+let server;
+let rxCharacteristic;
+
+document.getElementById("connectButton").addEventListener("click", connectBLE);
+document.getElementById("disconnectButton").addEventListener("click", disconnectBLE);
+document.getElementById("sendButton").addEventListener("click", sendExample);
+
+async function connectBLE() {
+  try {
+    device = await navigator.bluetooth.requestDevice({
+      filters: [
+        { services: [SERVICE_UUID] }
+      ]
+    });
+
+    device.addEventListener("gattserverdisconnected", onDisconnected);
+
+    server = await device.gatt.connect();
+
+    const service = await server.getPrimaryService(SERVICE_UUID);
+
+    rxCharacteristic =
+      await service.getCharacteristic(RX_UUID);
+
+    console.log("Connected to:", device.name);
+
+    document.getElementById("sendButton").disabled = false;
+  }
+  catch (error) {
+    console.error("Bluetooth connection failed:", error);
+  }
+}
+
+async function disconnectBLE() {
+  try {
+    device.gatt.disconnect();
+    document.getElementById("sendButton").disabled = true;
+  }
+  catch (error) {
+    console.error("Bluetooth disconnection failed:", error);
+  }
+}
+
+function onDisconnected() {
+  console.log("ESP32 disconnected");
+  document.getElementById("sendButton").disabled = true;
+}
+
+async function sendInChunks(data, chunkSize = 400) {
+  if (!rxCharacteristic) {
+    throw new Error("Not connected to the ESP32");
+  }
+
+  console.log("Sending ", data.byteLength, " bytes");
+  const statusElem = document.getElementById("status");
+  let i = 0;
+  for (let offset = 0; offset < data.byteLength; offset += chunkSize) {
+    console.log("Sending chunk ", i);
+    const chunk = new Uint8Array(data.slice(
+      offset,
+      Math.min(offset + chunkSize, data.byteLength)
+    ));
+    const chunkWithIndex = new Uint8Array(chunk.length + 2);
+    chunkWithIndex.set(new Uint8Array([(i >> 8) & 0xFF, (i & 0xFF)]));
+    chunkWithIndex.set(chunk, 2);
+    console.log(chunkWithIndex);
+
+    // if (rxCharacteristic.properties.writeWithoutResponse) {
+    //  await rxCharacteristic.writeValueWithoutResponse(chunkWithIndex);
+    //}
+    //else 
+      statusElem.innerText = "Sending... " + (((i + 1) / 480.0) * 100.0).toFixed(2) + "%";
+      console.log("Sent chunk:", i, " of length ", chunk.length, "bytes");
+      if (i == 479) {
+        statusElem.innerText = "Waiting for screen refresh."
+      }
+      await rxCharacteristic.writeValueWithResponse(chunkWithIndex);
+      i += 1;
+    //} 
+  }
+
+  const service = await server.getPrimaryService(SERVICE_UUID);
+
+  const numberCharacteristic = await service.getCharacteristic(NUMBER_UUID);
+
+  const value = await numberCharacteristic.readValue();
+
+  const number = value.getUint16(0, true); // true = little-endian
+
+  console.log("Number from ESP32:", number);
+  if (number != 480) {
+    statusElem.innerText = "Write error.";
+  } else {
+    statusElem.innerText = "Success.";
+  }
+}
+
+async function sendExample() {
+  const fileInput = document.getElementById("imageFile").files[0];
+  const fileReader = new FileReader();
+  fileReader.onload = async () => {
+    var arrayBuffer = fileReader.result;
+    console.log(arrayBuffer);
+    await sendInChunks(arrayBuffer, 400);
+  };
+  fileReader.readAsArrayBuffer(fileInput);
+}
+
+
+</script>
+
+</body>
+</html>
