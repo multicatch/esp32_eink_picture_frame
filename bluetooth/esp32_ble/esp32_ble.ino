@@ -29,10 +29,10 @@
 //
 // how long to wait for bluetooth connection before going to sleep
 #define PENDING_BLUETOOTH_TIMEOUT 30000
-// how long to sleep
-#define SLEEP_TIME                2
-// assume TIME_TO_SLEEP is minutes
-#define SLEEP_TIME_CONV_FACTOR    60*1000000ULL
+// how long to sleep (seconds)
+#define SLEEP_TIME                90
+// assume TIME_TO_SLEEP is seconds
+#define SLEEP_TIME_CONV_FACTOR    1000000ULL
 
 //
 // GxEPD2 initialization
@@ -172,9 +172,10 @@ class ImageTransferCallbacks : public BLECharacteristicCallbacks {
     linesWritten++;
 
     if (linesWritten == dh) {
-        digitalWrite(LED_PIN, HIGH);
-        Serial.println("Refreshing display");
-        display.refresh();
+      linesWritten = 0;
+      digitalWrite(LED_PIN, HIGH);
+      Serial.println("Refreshing display");
+      display.refresh();
     }
   }
 };
