@@ -4,7 +4,8 @@
 Convert an 800x480 24-bit BMP to 4bpp PE6DIB-style raw image data.
 
 Input:
-    BMP, already converted/dithered to the target Spectra 6 palette.
+    BMP, already converted/dithered to the target Spectra 6 palette
+    using https://gist.github.com/quark-zju/e488eb206ba66925dc23692170ba49f9
 
 Output:
     192000-byte raw 4bpp image:
