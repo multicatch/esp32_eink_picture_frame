@@ -9,11 +9,17 @@ This is a little project of mine with a Picture Frame made with:
 * a TP4057 USB-C charging module,
 * a 4000mAh LiPo battery. 
 
+This whole setup cost me around 60 EUR.
+
+The display and buck boost was ordered from AliExpress, I've included the 3 EUR customs fee in my calculations. The most expensive part was the display - I've bought it with the adapter for 41 EUR (there was currently a discont on AliExpress).
+
 ## BLE upload firmware
 
 The pictures are uploaded via Bluetooth (WiFi firmware is still in development).
 
-The pictures need to be converted to raw Spectra 6 format (4bpp), I've used [this script by quark-zju](https://gist.github.com/quark-zju/e488eb206ba66925dc23692170ba49f9) and made [another script](./bmp_to_bin.py) that converts the output image to a proper 4bpp palette. The original script also outputs sp6 files with raw data, but unfortunately the palette is wrong for my display.
+The pictures need to be converted to raw Spectra 6 format (4bpp), I've used [this script by quark-zju](https://gist.github.com/quark-zju/e488eb206ba66925dc23692170ba49f9) and made [another script](./bmp_to_bin.py) that converts the output image to a proper 4bpp palette. 
+
+The original script also outputs sp6 files with raw data, but unfortunately the palette in the output file is wrong. And it looked bad when the raw data was uploaded to the display.
 
 ## Battery expectancy
 
