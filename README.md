@@ -15,6 +15,8 @@ The pictures need to be converted to raw Spectra 6 format (4bpp), I've used [thi
 
 The battery should last about a month, but I'm still testing the frame and I'll update the estimate. For my calculations I've assumed the LED on the ESP32 and buck boost is lit continuously (to save the battery, you may unsolder those).
 
+You may turn off the frame after uploading the picture to save battery. In this case, the battery may last up to a few years if you don't change the picture often.
+
 ## Picture uploader
 
 The scripts were adapted as an HTML+JS tool: [ESP32 Picture Frame Uploader](https://multicatch.github.io/picture-frame/). You need Chrome (Mac, Windows, Android) or Bluefy (iOS) to use this tool.
@@ -29,4 +31,4 @@ The source code of this tool is here: [bluetooth/uploader](./bluetooth/uploader)
 
 ## Schematics
 
-#![Schematics of this custom picture frame](./img/schematics.jpeg)
+![Schematics of this custom picture frame](./img/schematics.jpeg)
