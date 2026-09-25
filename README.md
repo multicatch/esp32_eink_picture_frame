@@ -9,7 +9,7 @@ This is a little project of mine with a Picture Frame made with:
 * a TP4057 USB-C charging module,
 * a 4000mAh LiPo battery. 
 
-This whole setup cost me around 60 EUR.
+This whole setup cost me around 65 EUR.
 
 The display and buck boost was ordered from AliExpress, I've included the 3 EUR customs fee in my calculations. The most expensive part was the display - I've bought it with the adapter for 41 EUR (there was currently a discont on AliExpress).
 
