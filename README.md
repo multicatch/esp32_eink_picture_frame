@@ -9,7 +9,11 @@ This is a little project of mine with a Picture Frame made with:
 * a TP4057 USB-C charging module,
 * a 4000mAh LiPo battery. 
 
-The pictures are uploaded via Bluetooth. They need to be converted to raw Spectra 6 format (4bpp), I've used [this script by quark-zju](https://gist.github.com/quark-zju/e488eb206ba66925dc23692170ba49f9) and made [another script](./bmp_to_bin.py) that converts the output image to a proper 4bpp palette. The original script also outputs sp6 files with raw data, but unfortunately the palette is wrong for my display.
+The pictures are uploaded via Bluetooth (WiFi firmware is still in development).
+
+The pictures need to be converted to raw Spectra 6 format (4bpp), I've used [this script by quark-zju](https://gist.github.com/quark-zju/e488eb206ba66925dc23692170ba49f9) and made [another script](./bmp_to_bin.py) that converts the output image to a proper 4bpp palette. The original script also outputs sp6 files with raw data, but unfortunately the palette is wrong for my display.
+
+The battery should last about a month, but I'm still testing the frame and I'll update the estimate. For my calculations I've assumed the LED on the ESP32 and buck boost is lit continuously (to save the battery, you may unsolder those).
 
 ## Picture uploader
 
@@ -25,4 +29,4 @@ The source code of this tool is here: [bluetooth/uploader](./bluetooth/uploader)
 
 ## Schematics
 
-Coming soon
+#![Schematics of this custom picture frame](./img/schematics.jpeg)
